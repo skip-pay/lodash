@@ -120,14 +120,6 @@ function wrapImmutable(func, cloner) {
   };
 }
 
-var defaultOptions = {
-  cap: true,
-  curry: true,
-  fixed: true,
-  immutable: true,
-  rearg: true,
-};
-
 /**
  * The base implementation of `convert` which accepts a `util` object of methods
  * required to perform conversions.
@@ -136,7 +128,7 @@ var defaultOptions = {
  * @param {string} name The name of the function to convert.
  * @param {Function} func The function to convert.
  * @param {Object} [options] The options object.
- * @param {boolean} [options.cap=true] Specify capping iteratee arguments.
+ * @param {boolean} [options.cap=false] Specify capping iteratee arguments.
  * @param {boolean} [options.curry=true] Specify currying.
  * @param {boolean} [options.fixed=true] Specify fixed arity.
  * @param {boolean} [options.immutable=true] Specify immutable operations.
@@ -157,7 +149,13 @@ function baseConvert(util, name, func, options) {
   }
   options || (options = {});
 
-  var config = util.assign({}, options, defaultOptions);
+  var config = {
+    'cap': 'cap' in options ? options.cap : false,
+    'curry': 'curry' in options ? options.curry : true,
+    'fixed': 'fixed' in options ? options.fixed : true,
+    'immutable': 'immutable' in options ? options.immutable : true,
+    'rearg': 'rearg' in options ? options.rearg : true
+  };
 
   var defaultHolder = isLib ? func : fallbackHolder,
       forceCurry = ('curry' in options) && options.curry,
@@ -567,13 +565,5 @@ function baseConvert(util, name, func, options) {
 
   return _;
 }
-
-baseConvert.setDefaultOptions = function setDefaultOptions(options) {
-  for (opt in options) {
-    if (options.hasOwnProperty(opt) && defaultOptions.hasOwnProperty(opt)) {
-      defaultOptions[opt] = options[opt];
-    }
-  }
-};
 
 module.exports = baseConvert;
