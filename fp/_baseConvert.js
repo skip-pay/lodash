@@ -128,7 +128,7 @@ function wrapImmutable(func, cloner) {
  * @param {string} name The name of the function to convert.
  * @param {Function} func The function to convert.
  * @param {Object} [options] The options object.
- * @param {boolean} [options.cap=true] Specify capping iteratee arguments.
+ * @param {boolean} [options.cap=false] Specify capping iteratee arguments.
  * @param {boolean} [options.curry=true] Specify currying.
  * @param {boolean} [options.fixed=true] Specify fixed arity.
  * @param {boolean} [options.immutable=true] Specify immutable operations.
@@ -150,7 +150,7 @@ function baseConvert(util, name, func, options) {
   options || (options = {});
 
   var config = {
-    'cap': 'cap' in options ? options.cap : true,
+    'cap': 'cap' in options ? options.cap : false,
     'curry': 'curry' in options ? options.curry : true,
     'fixed': 'fixed' in options ? options.fixed : true,
     'immutable': 'immutable' in options ? options.immutable : true,
