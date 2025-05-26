@@ -1,6 +1,11 @@
+var arrayLikeKeys = require('./_arrayLikeKeys'),
+    baseKeysIn = require('./_baseKeysIn'),
+    isArrayLike = require('./isArrayLike');
+
 /**
  * Creates an array of the own and inherited enumerable property names of `object`.
  *
+ * **Note:** Non-object values are coerced to objects.
  *
  * @static
  * @memberOf _
@@ -21,12 +26,7 @@
  * // => ['a', 'b', 'c'] (iteration order is not guaranteed)
  */
 function keysIn(object) {
-  const result = []
-  for (const key in object) {
-    result.push(key)
-  }
-  return result
+  return isArrayLike(object) ? arrayLikeKeys(object, true) : baseKeysIn(object);
 }
 
-export default keysIn
-
+module.exports = keysIn;
