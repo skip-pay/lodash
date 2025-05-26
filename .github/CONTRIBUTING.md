@@ -1,7 +1,13 @@
+# :construction: Notice :construction:
+
+Pardon the mess. The `master` branch is in flux while we work on Lodash v5. This
+means things like npm scripts, which we encourage using for contributions, may
+not be working. Thank you for your patience.
+
 # Contributing to Lodash
 
 Contributions are always welcome. Before contributing please read the
-[code of conduct](https://js.foundation/community/code-of-conduct) &
+[code of conduct](https://code-of-conduct.openjsf.org) &
 [search the issue tracker](https://github.com/lodash/lodash/issues); your issue
 may have already been discussed or fixed in `master`. To contribute,
 [fork](https://help.github.com/articles/fork-a-repo/) Lodash, commit your changes,
@@ -19,21 +25,19 @@ Before submitting a request, please search for similar ones in the
 
 ## Pull Requests
 
-For additions or bug fixes you should only need to modify `lodash.js`. Include
-updated unit tests in the `test` directory as part of your pull request. Don’t
-worry about regenerating the `dist/` or `doc/` files.
+For additions or bug fixes, please modify the relevant files. Include
+updated unit tests in the `test` directory as part of your pull request.
+Unit test files should be named `[filename].test.js`.
 
 Before running the unit tests you’ll need to install, `npm i`,
 [development dependencies](https://docs.npmjs.com/files/package.json#devdependencies).
-Run unit tests from the command-line via `npm test`, or open `test/index.html` &
-`test/fp.html` in a web browser. The [Backbone](http://backbonejs.org/) &
-[Underscore](http://underscorejs.org/) test suites are included as well.
+Run unit tests from the command-line via `npm test`.
 
 ## Contributor License Agreement
 
-Lodash is a member of the [Open JS Foundation](https://openjsf.org/).
-As such, we request that all contributors sign our
-[contributor license agreement (CLA)](https://js.foundation/CLA/).
+Lodash is a member of the [JS Foundation](https://openjsf.org/).
+As such, we request that all contributors sign the JS Foundation
+[contributor license agreement (CLA)](https://cla.js.foundation/lodash/lodash).
 
 For more information about CLAs, please check out Alex Russell’s excellent post,
 [“Why Do I Need to Sign This?”](https://infrequently.org/2008/06/why-do-i-need-to-sign-this/).
@@ -61,18 +65,7 @@ established in the code.
   [JSDoc-style](http://www.2ality.com/2011/08/jsdoc-intro.html) comments for
   functions.
 
-Guidelines are enforced using [JSCS](https://www.npmjs.com/package/jscs):
+Guidelines are enforced using [ESLint](https://www.npmjs.com/package/eslint):
 ```bash
 $ npm run style
 ```
-
-## Tips
-
-You can opt-in to a pre-push git hook by adding an `.opt-in` file to the root of
-the project containing:
-```txt
-pre-push
-```
-
-With that, when you `git push`, the pre-push git hook will trigger and execute
-`npm run validate`.

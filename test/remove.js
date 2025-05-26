@@ -1,27 +1,80 @@
-#!/usr/bin/env node
-'use strict';
+import assert from 'assert';
+import { isEven, slice } from './utils.js';
+import remove from '../remove.js';
 
-var _ = require('../lodash'),
-    fs = require('fs'),
-    path = require('path');
+describe('remove', function() {
+  it('should modify the array and return removed elements', function() {
+    var array = [1, 2, 3, 4],
+        actual = remove(array, isEven);
 
-var args = (args = process.argv)
-  .slice((args[0] === process.execPath || args[0] === 'node') ? 2 : 0);
+    assert.deepStrictEqual(array, [1, 3]);
+    assert.deepStrictEqual(actual, [2, 4]);
+  });
 
-var filePath = path.resolve(args[1]),
-    reLine = /.*/gm;
+  it('should provide correct `predicate` arguments', function() {
+    var argsList = [],
+        array = [1, 2, 3],
+        clone = array.slice();
 
-var pattern = (function() {
-  var result = args[0],
-      delimiter = result.charAt(0),
-      lastIndex = result.lastIndexOf(delimiter);
+    remove(array, function(n, index) {
+      var args = slice.call(arguments);
+      args[2] = args[2].slice();
+      argsList.push(args);
+      return isEven(index);
+    });
 
-  return RegExp(result.slice(1, lastIndex), result.slice(lastIndex + 1));
-}());
+    assert.deepStrictEqual(argsList, [[1, 0, clone], [2, 1, clone], [3, 2, clone]]);
+  });
 
-/*----------------------------------------------------------------------------*/
+  it('should work with `_.matches` shorthands', function() {
+    var objects = [{ 'a': 0, 'b': 1 }, { 'a': 1, 'b': 2 }];
+    remove(objects, { 'a': 1 });
+    assert.deepStrictEqual(objects, [{ 'a': 0, 'b': 1 }]);
+  });
 
-fs.writeFileSync(filePath, fs.readFileSync(filePath, 'utf8').replace(pattern, function(match) {
-  var snippet = _.slice(arguments, -3, -2)[0];
-  return match.replace(snippet, snippet.replace(reLine, ''));
-}));
+  it('should work with `_.matchesProperty` shorthands', function() {
+    var objects = [{ 'a': 0, 'b': 1 }, { 'a': 1, 'b': 2 }];
+    remove(objects, ['a', 1]);
+    assert.deepStrictEqual(objects, [{ 'a': 0, 'b': 1 }]);
+  });
+
+  it('should work with `_.property` shorthands', function() {
+    var objects = [{ 'a': 0 }, { 'a': 1 }];
+    remove(objects, 'a');
+    assert.deepStrictEqual(objects, [{ 'a': 0 }]);
+  });
+
+  it('should preserve holes in arrays', function() {
+    var array = [1, 2, 3, 4];
+    delete array[1];
+    delete array[3];
+
+    remove(array, function(n) {
+      return n === 1;
+    });
+
+    assert.ok(!('0' in array));
+    assert.ok(!('2' in array));
+  });
+
+  it('should treat holes as `undefined`', function() {
+    var array = [1, 2, 3];
+    delete array[1];
+
+    remove(array, function(n) {
+      return n == null;
+    });
+
+    assert.deepStrictEqual(array, [1, 3]);
+  });
+
+  it('should not mutate the array until all elements to remove are determined', function() {
+    var array = [1, 2, 3];
+
+    remove(array, function(n, index) {
+      return isEven(index);
+    });
+
+    assert.deepStrictEqual(array, [2]);
+  });
+});
